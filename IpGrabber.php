@@ -134,10 +134,19 @@ $regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; // Path
 $regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?"; // GET Query 
 $regex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?"; // Anchor 
 
-if(preg_match("/^$regex$/i", $input)) { 
-    $command = "cd modules;python cloudflare.py --target " . $input . "";
-    $result = "\n".execute($command)."\n\n";
-    echo $result;
+if(preg_match("/^$regex$/i", $input)) {
+
+	$dns = dns_get_record($input, DNS_MX);
+
+	$mx_record=$dns[0]['target'];
+
+	$ip = gethostbyname($mx_record);
+
+	$n = gethostbyaddr($ip);
+
+	echo " [\$] This is the Real ip \"" . $ip . "\" of " . $input . " \n";
+	
+	echo " [\$] It is also to $n\n";
 }
 
 else {
